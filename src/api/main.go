@@ -30,7 +30,7 @@ func main() {
 		postgresPort, postgresDB, postgresSSL)
 
 	if err != nil {
-		fmt.Errorf("unable to connect to the database: %w", err)
+		fmt.Println(fmt.Errorf("unable to connect to the database: %w", err))
 		os.Exit(1)
 	}
 
