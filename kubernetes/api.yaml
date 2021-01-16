@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: digimon-api
+  namespace: pmorelli92
 spec:
   replicas: 1
   selector:
@@ -42,6 +43,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: digimon-api-svc
+  namespace: pmorelli92
 spec:
   selector:
     app: digimon-api
@@ -55,6 +57,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: digimon-api-ingress
+  namespace: pmorelli92
 spec:
   rules:
     - host: digimon-api-pmorelli92.cloud.okteto.net
