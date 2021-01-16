@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: digimon-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: digimon-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: digimon-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/pmorelli92/api-digimon-3ds:latest
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 5Mi
+            limits:
+              cpu: 10m
+              memory: 10Mi
+          env:
+            - name: HTTP_PORT
+              value: "80"
+            - name: "POSTGRES_HOST"
+              value: "postgres"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: digimon-api-svc
+spec:
+  selector:
+    app: digimon-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: digimon-api-ingress
+spec:
+  rules:
+    - host: digimon-api-pmorelli92.cloud.okteto.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: digimon-api-svc
+              servicePort: 80
