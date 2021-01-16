@@ -15,14 +15,15 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
   build-db:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         name: Checkout repository
 
       - uses: pmorelli92/github-container-registry-build-push@1.0.2
-        name: Build and Publish latest database image
+        name: Build and publish latest database image
         with:
           # Read note below to see how to generate the PAT
           personal-access-token: ${{secrets.GHCR_PAT}}
@@ -30,3 +31,19 @@ jobs:
           docker-image-tag: latest
           dockerfile-path: ./src/database/Dockerfile
           build-context: ./src/database
+
+  build-app:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout repository
+
+      - uses: pmorelli92/github-container-registry-build-push@1.0.2
+        name: Build and Publish latest api image
+        with:
+          # Read note below to see how to generate the PAT
+          personal-access-token: ${{secrets.GHCR_PAT}}
+          docker-image-name: api-digimon-3ds
+          docker-image-tag: latest
+          dockerfile-path: ./src/api/Dockerfile
+          build-context: ./src/api
