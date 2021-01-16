@@ -2,7 +2,10 @@ package main
 
 import (
 	"digimon-world-3ds-evo-req-cmd/domain"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -57,44 +60,45 @@ func main() {
 }
 
 func fetchDigimonByName() ([]string, error) {
-	return []string{"Agumon", "Greymon", "GeoGreymon"}, nil
+	type response struct {
+		Digimons []string `json:"digimons"`
+	}
+
+	resp, err := http.Get("https://digimon-api-pmorelli92.cloud.okteto.net/api/digimon")
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var respStruct response
+	err = json.Unmarshal(bytes, &respStruct)
+
+	return respStruct.Digimons, nil
 }
 
 func findPossibleEvolutions(digimon string) ([]domain.Digimon, error) {
-	return []domain.Digimon{
-		{
-			Name:       "Greymon",
-			HP:         "1000",
-			MP:         "-",
-			Atk:        "80",
-			Def:        "80",
-			Spd:        "-",
-			Int:        "-",
-			Weight:     "25 or more",
-			Mistake:    "3 or less",
-			Happiness:  "65 or more",
-			Discipline: "-",
-			Battles:    "-",
-			Techs:      "28 or more",
-			Decode:     "12 or more",
-			Quota:      "3",
-		},
-		{
-			Name:       "GeoGreymon",
-			HP:         "-",
-			MP:         "-",
-			Atk:        "120",
-			Def:        "-",
-			Spd:        "80",
-			Int:        "60",
-			Weight:     "28 or more",
-			Mistake:    "5 or less",
-			Happiness:  "-",
-			Discipline: "-",
-			Battles:    "15 or more",
-			Techs:      "35 or more",
-			Decode:     "15 or more",
-			Quota:      "3",
-		},
-	}, nil
+	type response struct {
+		Digimons []domain.Digimon `json:"digimons"`
+	}
+
+	url := fmt.Sprintf("https://digimon-api-pmorelli92.cloud.okteto.net/api/digimon/%s", digimon)
+	resp, err := http.Get(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var respStruct response
+	err = json.Unmarshal(bytes, &respStruct)
+
+	return respStruct.Digimons, nil
 }

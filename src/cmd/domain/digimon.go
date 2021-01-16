@@ -8,21 +8,21 @@ import (
 
 // Digimon contains all the requirements for triggering an evolution
 type Digimon struct {
-	Name       string `order:"0"`
-	HP         string `order:"1"`
-	MP         string `order:"2"`
-	Atk        string `order:"3"`
-	Def        string `order:"4"`
-	Spd        string `order:"5"`
-	Int        string `order:"6"`
-	Weight     string `order:"7"`
-	Mistake    string `order:"8"`
-	Happiness  string `order:"9"`
-	Discipline string `order:"10"`
-	Battles    string `order:"11"`
-	Techs      string `order:"12"`
-	Decode     string `order:"13"`
-	Quota      string `order:"14"`
+	Name       string `order:"0" json:"name"`
+	HP         string `order:"1" json:"hp"`
+	MP         string `order:"2" json:"mp"`
+	Atk        string `order:"3" json:"atk"`
+	Def        string `order:"4" json:"def"`
+	Spd        string `order:"5" json:"spd"`
+	Int        string `order:"6" json:"int"`
+	Weight     string `order:"7" json:"weight"`
+	Mistake    string `order:"8" json:"mistake"`
+	Happiness  string `order:"9" json:"happiness"`
+	Discipline string `order:"10" json:"discipline"`
+	Battles    string `order:"11" json:"battles"`
+	Techs      string `order:"12" json:"techs"`
+	Decode     string `order:"13" json:"decode"`
+	Quota      string `order:"14" json:"quota"`
 }
 
 // GetDigimonOrderedFieldsName returns all the fields name
