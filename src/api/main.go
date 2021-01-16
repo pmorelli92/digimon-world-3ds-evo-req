@@ -22,6 +22,7 @@ func main() {
 	postgresPort := envOrDefault("POSTGRES_PORT", "5432")
 	postgresDB := envOrDefault("POSTGRES_DB", "digimonsql")
 	postgresSSL := envOrDefault("POSTGRES_SSL", "disable")
+	httpPort := envOrDefault("HTTP_PORT", "8080")
 
 	// Postgres repository
 	repo, err := postgres.NewRepository(
@@ -41,7 +42,7 @@ func main() {
 		r.Get("/digimon/{name}", possibleEvolutionsHandler(repo))
 	})
 
-	err = http.ListenAndServe(":8080", r)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", httpPort), r)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
